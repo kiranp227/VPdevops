@@ -1,0 +1,12 @@
+db-cent ansible_ssh_host=192.168.0.108
+db-ubuntu ansible_ssh_host=192.168.0.107
+
+[dbservers]
+db-cent
+db-ubuntu
+
+[dbservers:vars]
+ansible_ssh_user=vagrant
+ansible_ssh_pass='vagrant'
+
+

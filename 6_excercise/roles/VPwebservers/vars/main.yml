@@ -1,0 +1,5 @@
+---
+# vars file for VPwebservers
+http_port: 80
+doc_root: /var/www/html
+user: IAM
