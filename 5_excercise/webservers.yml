@@ -1,0 +1,69 @@
+---
+- hosts: webservers
+  become: yes
+  vars:
+
+    http_port: 80
+    doc_root: /var/www/html
+ 
+  vars_prompt:
+
+  - name: user
+    prompt: "Enter the name "
+ 
+  tasks:
+  - name: installing httpd
+    yum: name=httpd state=installed
+    when: ansible_os_family == "RedHat" 
+ 
+  - name: starting httpd
+    service: name=httpd state=started
+    when: ansible_os_family == "RedHat" 
+
+  - name: moving template file
+    template: src=templates/httpd.j2 dest=/etc/httpd/conf/httpd.conf
+    when: ansible_os_family == "RedHat" 
+
+  - name: installing apache2
+    apt: name=apache2 state=installed
+    when: ansible_os_family == "Debian" 
+ 
+  - name: starting apache2
+    service: name=apache2 state=started
+    when: ansible_os_family == "Debian" 
+   
+  - name: moving template file
+    template:
+          src=templates/apache2.j2
+          dest=/etc/apache2/mods-available/mpm_prefork.conf
+    when: ansible_os_family == "Debian" 
+
+  - name: moving sample template
+    template: src=templates/sample.j2 dest=/home/vagrant/sample
+ 
+  - name: creating ansible directory
+    file: path={{doc_root}}/ansible state=directory
+
+  - name: moving index.html file
+    template: src=templates/index.j2 
+              dest={{ doc_root }}/ansible/index.html mode=0644
+    notify: restart apache/httpd
+
+  - name: iptables off
+    service: name=iptables state=stopped
+    when: ansible_os_family == "RedHat" 
+
+  - name: ufw off
+    yum: name=ufw state=status
+    when: ansible_os_family == "Debian" 
+ 
+  handlers:
+   
+  - name: restart apache/httpd
+    service: name=httpd state=restarted
+    when: ansible_os_family == "RedHat"
+
+  - name: restart apache/httpd
+    service: name=apache2 state=restarted
+    when: ansible_os_family == "Debian"
+

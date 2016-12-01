@@ -1,0 +1,19 @@
+web ansible_ssh_host=192.168.0.44
+db ansible_ssh_host=192.168.0.29
+#test ansible_ssh_host=192.168.0.28
+ 
+[webservers]
+web
+
+[dbservers]
+db
+
+[datacentreAZ:children]
+webservers
+dbservers
+
+[datacentreAZ:vars]
+ansible_ssh_user=vagrant
+ansible_ssh_pass='vagrant'
+
+
