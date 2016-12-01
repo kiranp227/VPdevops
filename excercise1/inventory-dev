@@ -1,0 +1,20 @@
+web ansible_ssh_host=192.168.0.44
+db ansible_ssh_host=192.168.0.29
+test ansible_ssh_host=192.168.0.28
+ 
+[abc]
+web
+db
+
+[xyz]
+test
+
+[all:children]
+abc
+xyz
+
+[all:vars]
+ansible_ssh_user=vagrant
+ansible_ssh_pass='vagrant'
+
+
