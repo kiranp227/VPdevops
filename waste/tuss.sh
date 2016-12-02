@@ -1,3 +1,0 @@
-date
-cla
-who
